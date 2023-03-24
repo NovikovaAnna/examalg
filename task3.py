@@ -1,14 +1,33 @@
-# TODO задача 2 считалочка
-"Для решения задачи используем рекурсивный алгоритм:"
+def count_connected_components(graph):
+    # Проверка на пустой граф
+    if not graph:
+        return 0
 
-def last_person_standing(N, K):
-    if N == 1:
-        return 1
-    else:
-        return (last_person_standing(N-1, K) + K-1) % N + 1
+    visited = set()
 
-# пример использования функции
-N = 10
-K = 3
-last_person = last_person_standing(N, K)
-print(f"Последний оставшийся человек имеет номер {last_person}.")
+    def dfs(v):
+        visited.add(v)
+        for u in graph[v]:
+            if u not in visited:
+                dfs(u)
+
+    count = 0
+    for v in graph:
+        # Проверка на корректность графа
+        if not all(u in graph for u in graph[v]):
+            raise ValueError("Некорректный граф")
+        if v not in visited:
+            dfs(v)
+            count += 1
+
+    return count
+
+# Пример использования
+graph = {
+    1: ['A', 'B'],
+    2: ['B', 'C'],
+    3: ['C', 'D'],
+    4: ['E'],
+    5: ['G', 'F']
+}
+print(count_connected_components(graph)) # выводит 3
